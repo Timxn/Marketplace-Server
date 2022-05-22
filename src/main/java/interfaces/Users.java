@@ -11,4 +11,7 @@ public interface Users {
 
     // Log out by deleting the specified Token
     void logout(UUID token);
+
+    // extracting userID from token, return userID, if no userID is found (token is invalid) throw NoSuch... Expection
+    UUID checkToken(UUID token);
 }
