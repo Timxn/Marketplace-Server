@@ -22,7 +22,7 @@ public class Users implements server.interfaces.Users {
     @Override
     public void register(String mail, String password) throws InstanceAlreadyExistsException {
         for (User user:userList) {
-            if (user.getMail() == mail) throw new InstanceAlreadyExistsException("Mail already registered");
+            if (user.getMail().equals(mail)) throw new InstanceAlreadyExistsException("Mail already registered");
         }
         User newUser = new User(mail, password);
         userList.add(newUser);
