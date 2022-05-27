@@ -41,7 +41,7 @@ public class Users implements server.interfaces.Users {
     @Override
     public UUID login(String mail, String password) {
         for (User user:userList) {
-            if (user.getMail() == mail && user.getPassword() == password) {
+            if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
                 UUID token = UUID.randomUUID();
                 allTokens.put(token, user.getUserID());
                 return token;
@@ -59,7 +59,7 @@ public class Users implements server.interfaces.Users {
      */
     @Override
     public void logout(UUID token) {
-
+        allTokens.remove(token);
     }
 
     /**
@@ -72,7 +72,10 @@ public class Users implements server.interfaces.Users {
      */
     @Override
     public UUID checkToken(UUID token) {
-        return null;
+        if (allTokens.get(token).equals(null)) {
+            throw new NoSuchElementException();
+        }
+        return allTokens.get(token);
     }
 
     /**
