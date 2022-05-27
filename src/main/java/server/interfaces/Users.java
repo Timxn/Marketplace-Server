@@ -1,5 +1,6 @@
 package server.interfaces;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.UUID;
 
 /**
@@ -14,7 +15,7 @@ public interface Users {
      * @param mail     the mail
      * @param password the password
      */
-    void register(String mail, String password);
+    void register(String mail, String password) throws InstanceAlreadyExistsException;
 
     /**
      * Login uuid.
