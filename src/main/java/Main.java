@@ -1,7 +1,6 @@
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import server.implementation.Users;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -62,50 +61,56 @@ public class Main {
                 response.status(200);
                 return response.status();
             });
-            post("/deposit", ((request, response) -> {
+            put("/deposit", ((request, response) -> {
                 JsonObject requestJSON = null;
                 try {
                     requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
                 } catch (JsonParseException e) {
-                    JsonObject exampleJson = new JsonObject();
-                    exampleJson.addProperty("token", "TOKEN");
-                    exampleJson.addProperty("value", 42);
-                    return exampleJson.toString();
+                    response.status(404);
+                    return exampleJsonWithTokenAndValue();
                 }
-                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double value = requestJSON.get("value").getAsDouble();
-                double newBalance = users.deposit(value, token);
-                JsonObject returnJSON= new JsonObject();
-                returnJSON.addProperty("balance", newBalance);
-                return returnJSON.toString();
-            }));
-            post("/withdraw", ((request, response) -> {
-                JsonObject requestJSON = null;
-                try {
-                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                } catch (JsonParseException e) {
-                    return exampleJsonWithdraw();
-                }
-                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
                 double value = 0;
                 try {
                     value = requestJSON.get("value").getAsDouble();
                 } catch (NumberFormatException e) {
-                    return exampleJsonWithdraw();
+                    response.status(404);
+                    return exampleJsonWithTokenAndValue();
                 }
+                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
+                double newBalance = users.deposit(value, token);
+                response.status(200);
+                return returnJSONWithUserIDAndBalance(users.checkToken(token), newBalance);}));
+            put("/withdraw", ((request, response) -> {
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+                double value = 0;
+                try {
+                    value = requestJSON.get("value").getAsDouble();
+                } catch (NumberFormatException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
                 double newBalance = users.withdraw(value, token);
-                JsonObject returnJSON= new JsonObject();
-                returnJSON.addProperty("userID", users.checkToken(token).toString());
-                returnJSON.addProperty("balance", newBalance);
-                return returnJSON.toString();
+                response.status(200);
+                return returnJSONWithUserIDAndBalance(users.checkToken(token), newBalance);
             }));
         });
     }
 
-    private static String exampleJsonWithdraw() {
+    private static String exampleJsonWithTokenAndValue() {
         JsonObject exampleJson = new JsonObject();
         exampleJson.addProperty("token", "TOKEN");
         exampleJson.addProperty("value", 42);
         return exampleJson.toString();
+    }
+    private static String returnJSONWithUserIDAndBalance(UUID userID, double value) {
+        JsonObject returnJSON= new JsonObject();
+        returnJSON.addProperty("userID", userID.toString());
+        returnJSON.addProperty("balance", value);
+        return returnJSON.toString();
     }
 }
