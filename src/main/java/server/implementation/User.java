@@ -6,6 +6,15 @@ public class User {
     private UUID userID;
     private String mail;
     private String password;
+    private double balance;
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
     public User(String mail, String password) {
         this.userID = UUID.randomUUID();
