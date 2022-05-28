@@ -112,6 +112,12 @@ public class Main {
         });
     }
 
+    private static String exampleJSONWithUsernameAndPassword() {
+        JsonObject exampleJson = new JsonObject();
+        exampleJson.addProperty("mail", "MAIL");
+        exampleJson.addProperty("password", "PASSWORD");
+        return exampleJson.toString();
+    }
     private static String exampleJsonWithTokenAndValue() {
         JsonObject exampleJson = new JsonObject();
         exampleJson.addProperty("token", "TOKEN");
