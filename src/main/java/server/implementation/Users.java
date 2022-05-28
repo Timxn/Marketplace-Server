@@ -1,10 +1,7 @@
 package server.implementation;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 public class Users implements server.interfaces.Users {
     ArrayList<User> userList = new ArrayList<User>();
@@ -86,20 +83,47 @@ public class Users implements server.interfaces.Users {
      * @implNote POST
      */
     @Override
-    public double deposit(double extra) {
-        return 0;
+    public double deposit(double extra, UUID token) {
+        UUID userID = checkToken(token);
+        extra = Math.abs(extra);
+        User user = null;
+        try {
+            user = getUserByID(userID);
+        } catch (NoSuchElementException e) {
+            System.out.println("Users.deposit: user cant be found");
+        }
+        user.setBalance(user.getBalance() + extra);
+        return user.getBalance();
     }
 
     /**
-     * Checkout money.
+     * withdraw money.
      *
      * @param checkoutSum the checkout sum
      * @return the new balance
      * @implNote POST
-     * @implNote just substract the mone
+     * @implNote just substract the money
      */
     @Override
-    public double checkout(double checkoutSum) {
-        return 0;
+    public double withdraw(double checkoutSum, UUID token) {
+        UUID userID = checkToken(token);
+        checkoutSum = Math.abs(checkoutSum);
+        User user = null;
+        try {
+            user = getUserByID(userID);
+        } catch (NoSuchElementException e) {
+            System.out.println("Users.deposit: user cant be found");
+        }
+        user.setBalance(user.getBalance() - checkoutSum);
+        return user.getBalance();
+    }
+
+    private User getUserByID(UUID userID) {
+        int i = userList.size()-1;
+        while (!(userList.get(i).getUserID().equals(userID))) {
+            if (i<0) throw new NoSuchElementException();
+            i--;
+        }
+        return userList.get(i);
     }
 }
