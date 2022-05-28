@@ -53,17 +53,19 @@ public interface Users {
      *
      * @implNote POST
      * @param extra the money that gets deposited
+     * @param token the user token, used to find the user
      * @return the new balance
      */
-    double deposit(double extra);
+    double deposit(double extra, UUID token);
 
     /**
-     * Checkout money.
+     * withdraw money.
      *
      * @implNote POST
-     * @implNote just substract the mone
+     * @implNote just substract the money
      * @param checkoutSum the checkout sum
+     * @param token the user token, used to find the user
      * @return the new balance
      */
-    double checkout(double checkoutSum);
+    double withdraw(double checkoutSum, UUID token);
 }
