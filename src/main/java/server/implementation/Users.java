@@ -69,6 +69,7 @@ public class Users implements server.interfaces.Users {
      */
     @Override
     public UUID checkToken(UUID token) {
+        if (allTokens.size() == 0) throw new NoSuchElementException();
         if (allTokens.get(token).equals(null)) {
             throw new NoSuchElementException();
         }
