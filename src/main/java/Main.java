@@ -17,7 +17,7 @@ public class Main {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
                 try {
-                    users.checkToken(UUID.fromString(requestJSON.get("token").toString().replace("\"","")));
+                    users.checkToken(UUID.fromString(requestJSON.get("token").getAsString()));
                 } catch (NoSuchElementException e) {
                     halt(401, "Unauthorized");
                 }
@@ -26,6 +26,10 @@ public class Main {
         path("/user", () -> {
             post("/register", (request, response) -> {
                 JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                if (requestJSON.get("mail") == null || requestJSON.get("password") == null) {
+                    response.status(400);
+                    return exampleJSONWithUsernameAndPassword();
+                }
                 try {
                     users.register(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
                     response.status(201);
@@ -66,20 +70,21 @@ public class Main {
                 try {
                     requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
                 } catch (JsonParseException e) {
-                    response.status(404);
+                    response.status(400);
                     return exampleJsonWithTokenAndValue();
                 }
                 double value = 0;
                 try {
                     value = requestJSON.get("value").getAsDouble();
                 } catch (NumberFormatException e) {
-                    response.status(404);
+                    response.status(400);
                     return exampleJsonWithTokenAndValue();
                 }
                 UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
                 double newBalance = users.deposit(value, token);
                 response.status(200);
-                return returnJSONWithUserIDAndBalance(users.checkToken(token), newBalance);}));
+                return returnJSONWithUserIDAndBalance(newBalance);
+            }));
             put("/withdraw", ((request, response) -> {
                 JsonObject requestJSON = null;
                 try {
@@ -96,8 +101,14 @@ public class Main {
                 UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
                 double newBalance = users.withdraw(value, token);
                 response.status(200);
-                return returnJSONWithUserIDAndBalance(users.checkToken(token), newBalance);
+                return returnJSONWithUserIDAndBalance(newBalance);
             }));
+        });
+        path("/market", () -> {
+            post("/register", (request, response) -> {
+                response.status(501);
+                return "WIP";
+            });
         });
     }
 
@@ -107,9 +118,8 @@ public class Main {
         exampleJson.addProperty("value", 42);
         return exampleJson.toString();
     }
-    private static String returnJSONWithUserIDAndBalance(UUID userID, double value) {
+    private static String returnJSONWithUserIDAndBalance(double value) {
         JsonObject returnJSON= new JsonObject();
-        returnJSON.addProperty("userID", userID.toString());
         returnJSON.addProperty("balance", value);
         return returnJSON.toString();
     }
