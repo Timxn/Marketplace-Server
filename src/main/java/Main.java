@@ -1,5 +1,7 @@
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import server.implementation.Users;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -15,13 +17,16 @@ public class Main {
         before(((request, response) -> {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
-                if ((users.checkToken(UUID.fromString(requestJSON.get("token").toString().replace("\"","")))).equals(null)) halt(401, "Unauthorized");
+                try {
+                    users.checkToken(UUID.fromString(requestJSON.get("token").toString().replace("\"","")));
+                } catch (NoSuchElementException e) {
+                    halt(401, "Unauthorized");
+                }
             }
         }));
         path("/user", () -> {
             post("/register", (request, response) -> {
                 JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                String username = requestJSON.get("mail").getAsString();
                 try {
                     users.register(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
                     response.status(201);
@@ -45,21 +50,62 @@ public class Main {
                 }
             });
             delete("/logout", (request, response) -> {
-                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                users.logout(UUID.fromString((requestJSON.get("token").toString()).replace("\"","")));
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    JsonObject exampleJson = new JsonObject();
+                    exampleJson.addProperty("token", "TOKEN");
+                    return exampleJson.toString();
+                }
+                users.logout(UUID.fromString((requestJSON.get("token").getAsString())));
                 response.status(200);
                 return response.status();
             });
+            post("/deposit", ((request, response) -> {
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    JsonObject exampleJson = new JsonObject();
+                    exampleJson.addProperty("token", "TOKEN");
+                    exampleJson.addProperty("value", 42);
+                    return exampleJson.toString();
+                }
+                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
+                double value = requestJSON.get("value").getAsDouble();
+                double newBalance = users.deposit(value, token);
+                JsonObject returnJSON= new JsonObject();
+                returnJSON.addProperty("balance", newBalance);
+                return returnJSON.toString();
+            }));
+            post("/withdraw", ((request, response) -> {
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    return exampleJsonWithdraw();
+                }
+                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
+                double value = 0;
+                try {
+                    value = requestJSON.get("value").getAsDouble();
+                } catch (NumberFormatException e) {
+                    return exampleJsonWithdraw();
+                }
+                double newBalance = users.withdraw(value, token);
+                JsonObject returnJSON= new JsonObject();
+                returnJSON.addProperty("userID", users.checkToken(token).toString());
+                returnJSON.addProperty("balance", newBalance);
+                return returnJSON.toString();
+            }));
         });
-//        path("/user", () -> {
-//            post("/login", ((request, response) -> {
-//                response.type("text/json");
-//                JsonObject temp = new JsonObject();
-//                temp.addProperty("alter", 42);
-//                temp.addProperty("name", "dieter");
-//                return temp;
-//            }));
-//        });
+    }
 
+    private static String exampleJsonWithdraw() {
+        JsonObject exampleJson = new JsonObject();
+        exampleJson.addProperty("token", "TOKEN");
+        exampleJson.addProperty("value", 42);
+        return exampleJson.toString();
     }
 }
