@@ -13,7 +13,7 @@ public interface Market {
      * Get all products
      *
      * @implNote GET
-     * @return the object[][]={ {productID, productName, price, avaibleUnits}, ... }
+     * @return the object[][]={ {productID, productName, price, availableUnits}, ... }
      */
     Object[][] getAllProducts();
 
