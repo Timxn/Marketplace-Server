@@ -2,6 +2,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import server.implementation.Users;
+//import server.implementation.Market;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.NoSuchElementException;
@@ -11,6 +12,7 @@ import static spark.Spark.*;
 
 public class Main {
     private static Users users = new Users();
+//    private static Market markt = new Market();
     // http://localhost:4567/hello
     public static void main(String[] args) {
         before(((request, response) -> {
@@ -105,10 +107,40 @@ public class Main {
             }));
         });
         path("/market", () -> {
-            post("/register", (request, response) -> {
+            get("/products", (request, response) -> {
+//                markt.getAllProducts();
                 response.status(501);
                 return "WIP";
             });
+            post("/addProduct", ((request, response) -> {
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+                String name = null;
+                try {
+                    name = requestJSON.get("value").getAsString();
+                } catch (NumberFormatException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+//                markt.addProduct(name);
+                response.status(401);
+                return "Done!";
+            }));
+            delete("/deleteProduct", ((request, response) -> {
+                response.status(501);
+                return "WIP";
+            }));
+            post("/sell", ((request, response) -> {
+                response.status(501);
+                return "WIP";
+            }));
+            post("/buy", ((request, response) -> {
+                response.status(501);
+                return "WIP";
+            }));
         });
     }
 
