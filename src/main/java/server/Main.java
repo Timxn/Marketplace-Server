@@ -1,3 +1,5 @@
+package server;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -88,6 +90,24 @@ public class Main {
                 return returnJSONWithUserIDAndBalance(newBalance);
             }));
             put("/withdraw", ((request, response) -> {
+                JsonObject requestJSON = null;
+                try {
+                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                } catch (JsonParseException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+                double value = 0;
+                try {
+                    value = requestJSON.get("value").getAsDouble();
+                } catch (NumberFormatException e) {
+                    return exampleJsonWithTokenAndValue();
+                }
+                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
+                double newBalance = users.withdraw(value, token);
+                response.status(200);
+                return returnJSONWithUserIDAndBalance(newBalance);
+            }));
+            put("/getInventory", ((request, response) -> {
                 JsonObject requestJSON = null;
                 try {
                     requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
