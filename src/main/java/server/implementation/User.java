@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class User {
+public class User implements server.interfaces.User {
     private UUID userID;
     private String mail;
     private String password;
@@ -47,10 +47,12 @@ public class User {
         return ownedProducts.get(productID);
     }
 
+    @Override
     public double getBalance() {
         return balance;
     }
 
+    @Override
     public void setBalance(double balance) {
         this.balance = balance;
     }
@@ -61,14 +63,17 @@ public class User {
         this.password = password;
     }
 
+    @Override
     public UUID getUserID() {
         return userID;
     }
 
+    @Override
     public String getMail() {
         return mail;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
