@@ -3,7 +3,7 @@ package server;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import server.implementation.Users;
+import server.implementation.ShopManager;
 //import server.implementation.Market;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -12,8 +12,8 @@ import java.util.UUID;
 
 import static spark.Spark.*;
 
-public class Main {
-    private static Users users = new Users();
+public class RestAPI {
+    private static ShopManager shopManager = new ShopManager();
 //    private static Market markt = new Market();
     // http://localhost:4567/hello
     public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class Main {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
                 try {
-                    users.checkToken(UUID.fromString(requestJSON.get("token").getAsString()));
+                    shopManager.checkToken(UUID.fromString(requestJSON.get("token").getAsString()));
                 } catch (NoSuchElementException e) {
                     halt(401, "Unauthorized");
                 }
@@ -35,7 +35,7 @@ public class Main {
                     return exampleJSONWithUsernameAndPassword();
                 }
                 try {
-                    users.register(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
+                    shopManager.register(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
                     response.status(201);
                 } catch (InstanceAlreadyExistsException e) {
                     response.status(405);
@@ -46,7 +46,7 @@ public class Main {
                 JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
                 UUID token;
                 try {
-                    token = users.login(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
+                    token = shopManager.login(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
                     response.status(201);
                     JsonObject returnElement = new JsonObject();
                     returnElement.addProperty("token", token.toString());
@@ -65,7 +65,7 @@ public class Main {
                     exampleJson.addProperty("token", "TOKEN");
                     return exampleJson.toString();
                 }
-                users.logout(UUID.fromString((requestJSON.get("token").getAsString())));
+                shopManager.logout(UUID.fromString((requestJSON.get("token").getAsString())));
                 response.status(200);
                 return response.status();
             });
@@ -85,7 +85,7 @@ public class Main {
                     return exampleJsonWithTokenAndValue();
                 }
                 UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = users.deposit(value, token);
+                double newBalance = shopManager.deposit(value, token);
                 response.status(200);
                 return returnJSONWithUserIDAndBalance(newBalance);
             }));
@@ -103,7 +103,7 @@ public class Main {
                     return exampleJsonWithTokenAndValue();
                 }
                 UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = users.withdraw(value, token);
+                double newBalance = shopManager.withdraw(value, token);
                 response.status(200);
                 return returnJSONWithUserIDAndBalance(newBalance);
             }));
@@ -121,7 +121,7 @@ public class Main {
                     return exampleJsonWithTokenAndValue();
                 }
                 UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = users.withdraw(value, token);
+                double newBalance = shopManager.withdraw(value, token);
                 response.status(200);
                 return returnJSONWithUserIDAndBalance(newBalance);
             }));

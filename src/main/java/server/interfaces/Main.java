@@ -6,7 +6,7 @@ import java.util.UUID;
 /**
  * The interface Users.
  */
-public interface Users {
+public interface Main {
     /**
      * Register.
      * @implNote POST

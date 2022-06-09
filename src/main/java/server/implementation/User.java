@@ -6,14 +6,12 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class User {
-    private UUID userID;
+public class User implements server.interfaces.User {
+    private final UUID userID;
     private String mail;
     private String password;
     private double balance;
-
-    // Hashmap(productID, numberOfOwnedProducts)
-    HashMap<UUID, Integer> ownedProducts = new HashMap<>();
+    HashMap<UUID, Integer> ownedProducts = new HashMap<>(); // Hashmap(productID, numberOfOwnedProducts)
 
     /**
      * Buy product. If you want to buy 2 products XXXX where each XXXX costs 42 use buy(XXXX, 2, 42)
@@ -47,10 +45,12 @@ public class User {
         return ownedProducts.get(productID);
     }
 
+    @Override
     public double getBalance() {
         return balance;
     }
 
+    @Override
     public void setBalance(double balance) {
         this.balance = balance;
     }
@@ -61,14 +61,17 @@ public class User {
         this.password = password;
     }
 
+    @Override
     public UUID getUserID() {
         return userID;
     }
 
+    @Override
     public String getMail() {
         return mail;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
