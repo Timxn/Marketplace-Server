@@ -1,0 +1,49 @@
+package server.implementation;
+
+import java.util.HashMap;
+import java.util.UUID;
+
+public class User {
+    private final UUID userID;
+    private final String mail;
+    private final String password;
+    private double balance;
+    HashMap<String, Integer> depot = new HashMap<>();
+
+    public User(String mail, String password) {
+        this.userID = UUID.randomUUID();
+        this.mail = mail;
+        this.password = password;
+        this.balance = 0;
+    }
+
+    public void updateDepot(String product, int count) {
+        if(depot.containsKey(product)) {
+            depot.put(product, depot.get(product) + count);
+        } else {
+            depot.put(product, count);
+        }
+    }
+
+    public UUID getUserID() {
+        return userID;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+
+}
