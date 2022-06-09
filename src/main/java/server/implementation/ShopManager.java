@@ -4,7 +4,7 @@ import javax.management.InstanceAlreadyExistsException;
 import java.util.*;
 
 public class ShopManager implements server.interfaces.Main {
-    ArrayList<User> userList = new ArrayList<User>();
+    ArrayList<UserOld> userOldList = new ArrayList<UserOld>();
     HashMap<UUID,UUID> allTokens = new HashMap<>();
 
     /**
@@ -18,11 +18,11 @@ public class ShopManager implements server.interfaces.Main {
      */
     @Override
     public void register(String mail, String password) throws InstanceAlreadyExistsException {
-        for (User user:userList) {
-            if (user.getMail().equals(mail)) throw new InstanceAlreadyExistsException("Mail already registered");
+        for (UserOld userOld : userOldList) {
+            if (userOld.getMail().equals(mail)) throw new InstanceAlreadyExistsException("Mail already registered");
         }
-        User newUser = new User(mail, password);
-        userList.add(newUser);
+        UserOld newUserOld = new UserOld(mail, password);
+        userOldList.add(newUserOld);
     }
 
     /**
@@ -37,10 +37,10 @@ public class ShopManager implements server.interfaces.Main {
      */
     @Override
     public UUID login(String mail, String password) {
-        for (User user:userList) {
-            if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
+        for (UserOld userOld : userOldList) {
+            if (userOld.getMail().equals(mail) && userOld.getPassword().equals(password)) {
                 UUID token = UUID.randomUUID();
-                allTokens.put(token, user.getUserID());
+                allTokens.put(token, userOld.getUserID());
                 return token;
             }
         }
@@ -86,14 +86,14 @@ public class ShopManager implements server.interfaces.Main {
     public double deposit(double extra, UUID token) {
         UUID userID = checkToken(token);
         extra = Math.abs(extra);
-        User user = null;
+        UserOld userOld = null;
         try {
-            user = getUserByID(userID);
+            userOld = getUserByID(userID);
         } catch (NoSuchElementException e) {
             System.out.println("Users.deposit: user cant be found");
         }
-        user.setBalance(user.getBalance() + extra);
-        return user.getBalance();
+        userOld.setBalance(userOld.getBalance() + extra);
+        return userOld.getBalance();
     }
 
     /**
@@ -108,22 +108,22 @@ public class ShopManager implements server.interfaces.Main {
     public double withdraw(double checkoutSum, UUID token) {
         UUID userID = checkToken(token);
         checkoutSum = Math.abs(checkoutSum);
-        User user = null;
+        UserOld userOld = null;
         try {
-            user = getUserByID(userID);
+            userOld = getUserByID(userID);
         } catch (NoSuchElementException e) {
             System.out.println("Users.deposit: user cant be found");
         }
-        user.setBalance(user.getBalance() - checkoutSum);
-        return user.getBalance();
+        userOld.setBalance(userOld.getBalance() - checkoutSum);
+        return userOld.getBalance();
     }
 
-    private User getUserByID(UUID userID) {
-        int i = userList.size()-1;
-        while (!(userList.get(i).getUserID().equals(userID))) {
+    private UserOld getUserByID(UUID userID) {
+        int i = userOldList.size()-1;
+        while (!(userOldList.get(i).getUserID().equals(userID))) {
             if (i<0) throw new NoSuchElementException();
             i--;
         }
-        return userList.get(i);
+        return userOldList.get(i);
     }
 }

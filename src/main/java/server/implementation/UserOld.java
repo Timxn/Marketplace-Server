@@ -1,15 +1,13 @@
 package server.implementation;
 
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class User implements server.interfaces.User {
+public class UserOld implements server.interfaces.User {
     private final UUID userID;
-    private String mail;
-    private String password;
+    private final String mail;
+    private final String password;
     private double balance;
     HashMap<UUID, Integer> ownedProducts = new HashMap<>(); // Hashmap(productID, numberOfOwnedProducts)
 
@@ -55,7 +53,7 @@ public class User implements server.interfaces.User {
         this.balance = balance;
     }
 
-    public User(String mail, String password) {
+    public UserOld(String mail, String password) {
         this.userID = UUID.randomUUID();
         this.mail = mail;
         this.password = password;
