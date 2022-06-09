@@ -7,13 +7,11 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class User implements server.interfaces.User {
-    private UUID userID;
+    private final UUID userID;
     private String mail;
     private String password;
     private double balance;
-
-    // Hashmap(productID, numberOfOwnedProducts)
-    HashMap<UUID, Integer> ownedProducts = new HashMap<>();
+    HashMap<UUID, Integer> ownedProducts = new HashMap<>(); // Hashmap(productID, numberOfOwnedProducts)
 
     /**
      * Buy product. If you want to buy 2 products XXXX where each XXXX costs 42 use buy(XXXX, 2, 42)

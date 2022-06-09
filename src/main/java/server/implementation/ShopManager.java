@@ -3,7 +3,7 @@ package server.implementation;
 import javax.management.InstanceAlreadyExistsException;
 import java.util.*;
 
-public class Main implements server.interfaces.Main {
+public class ShopManager implements server.interfaces.Main {
     ArrayList<User> userList = new ArrayList<User>();
     HashMap<UUID,UUID> allTokens = new HashMap<>();
 
