@@ -8,7 +8,7 @@ public class User {
     private final String mail;
     private final String password;
     private double balance;
-    HashMap<String, Integer> depot = new HashMap<>();
+    private final HashMap<String, Integer> depot = new HashMap<>();
 
     public User(String mail, String password) {
         this.userID = UUID.randomUUID();
@@ -45,5 +45,7 @@ public class User {
         this.balance = balance;
     }
 
-
+    public HashMap<String, Integer> getDepot() {
+        return depot;
+    }
 }
