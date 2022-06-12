@@ -1,78 +1,89 @@
 package server.implementation;
 
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class User implements server.interfaces.User {
+public class User implements server.interfaces.InterfaceUser {
     private final UUID userID;
-    private String mail;
-    private String password;
+    private final String mail;
+    private final String password;
     private double balance;
-    HashMap<UUID, Integer> ownedProducts = new HashMap<>(); // Hashmap(productID, numberOfOwnedProducts)
-
-    /**
-     * Buy product. If you want to buy 2 products XXXX where each XXXX costs 42 use buy(XXXX, 2, 42)
-     *
-     * @param productID        the product id
-     * @param numberOfProducts the number of products
-     * @param price            the price
-     * @throws NoSuchElementException if not enough money
-     * @return the new number of the product
-     */
-    public int buy(UUID productID, int numberOfProducts, double price) {
-        if (balance < numberOfProducts*price) throw new NoSuchElementException("Not enough money");
-        ownedProducts.replace(productID, ownedProducts.get(productID)+numberOfProducts);
-        balance =- (price*numberOfProducts);
-        return ownedProducts.get(productID);
-    }
-
-    /**
-     * Sell product. If you want to sell 2 products XXXX where each XXXX costs 42 use sell(XXXX, 2, 42)
-     *
-     * @param productID        the product id
-     * @param numberOfProducts the number of products
-     * @param price            the price
-     * @throws NoSuchElementException if not enough money
-     * @return the new number of the product
-     */
-    public int sell(UUID productID, int numberOfProducts, double price) {
-        if (ownedProducts.get(productID) < numberOfProducts) throw new NoSuchElementException("Not enough of this product");
-        ownedProducts.replace(productID, ownedProducts.get(productID)-numberOfProducts);
-        balance =+ (price*numberOfProducts);
-        return ownedProducts.get(productID);
-    }
-
-    @Override
-    public double getBalance() {
-        return balance;
-    }
-
-    @Override
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
+    private final HashMap<String, Integer> depot = new HashMap<>();
 
     public User(String mail, String password) {
         this.userID = UUID.randomUUID();
         this.mail = mail;
         this.password = password;
+        this.balance = 100;
     }
 
+    /**
+     * Adjusts the number of products in the depot.
+     * @param product product that will be changed
+     * @param count the number to be changed (positive or negative)
+     * @throws Exception throws exception if less than 0 products would be available after deduction
+     */
+    @Override
+    public void updateDepot(String product, int count) throws Exception {
+        if (depot.getOrDefault(product, 0) + count < 0) throw new Exception("Not enough products available!");
+        if(depot.containsKey(product)) {
+            depot.put(product, depot.get(product) + count);
+        } else {
+            depot.put(product, count);
+        }
+    }
+
+    /**
+     * Returns the userID of the user.
+     * @return userID
+     */
     @Override
     public UUID getUserID() {
         return userID;
     }
 
+    /**
+     * Returns the mail of the user.
+     * @return mail
+     */
     @Override
     public String getMail() {
         return mail;
     }
 
+    /**
+     * Returns the password of the user.
+     * @return password
+     */
     @Override
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Returns the amount of money the user has.
+     * @return balance
+     */
+    @Override
+    public double getBalance() {
+        return balance;
+    }
+
+    /**
+     * Alters the amount of money the user has.
+     * @param balance the new amount of money
+     */
+    @Override
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    /**
+     * Returns the depot which all items the user has.
+     * @return depot of the user
+     */
+    @Override
+    public HashMap<String, Integer> getDepot() {
+        return depot;
     }
 }
