@@ -42,6 +42,7 @@ public class ShopManager {
             }
         }
         registeredUsers.remove(user);
+        logout(token);
     }
 
     public void buyProduct(String product, int count, UUID token) throws Exception {
@@ -52,6 +53,7 @@ public class ShopManager {
         user.setBalance(user.getBalance() - market.buy(product, count));
         user.updateDepot(product, count);
         registeredUsers.set(index, user);
+        market.updatePrice();
     }
 
     public void sellProduct(String product, int count, UUID token) throws Exception {
@@ -61,13 +63,14 @@ public class ShopManager {
         user.updateDepot(product, -count);
         user.setBalance(user.getBalance() + market.sell(product, count));
         registeredUsers.set(index, user);
+        market.updatePrice();
     }
 
     public HashMap<String, Integer> getAllOffers(){
         return market.getOffers();
     }
 
-    public HashMap<String, Integer> getAllPrices() {
+    public HashMap<String, Double> getAllPrices() {
         return market.getPrices();
     }
 
@@ -77,6 +80,10 @@ public class ShopManager {
 
     public double getBalance(UUID token) {
         return registeredUsers.get(getIndexOfUserByToken(token)).getBalance();
+    }
+
+    public void addProductToOffers(String product, int count) {
+        market.sell(product, count);
     }
 
     private UUID getUserIDByToken(UUID token) {
