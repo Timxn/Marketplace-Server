@@ -21,7 +21,7 @@ public class RestAPI {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
                 try {
-                    shopManager.checkToken(UUID.fromString(requestJSON.get("token").getAsString()));
+                    shopManager.getUserIDByToken(UUID.fromString(requestJSON.get("token").getAsString()));
                 } catch (NoSuchElementException e) {
                     halt(401, "Unauthorized");
                 }
