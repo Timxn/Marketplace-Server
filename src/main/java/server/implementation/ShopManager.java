@@ -25,7 +25,7 @@ public class ShopManager {
     }
 
     /**
-     * Logs in a user with his passowrt and mail and returns a token.
+     * Logs in a user with his password and mail and returns a token.
      * @param mail mail of the user
      * @param password password of the user
      * @return token which the user uses to perform further actions
@@ -43,7 +43,7 @@ public class ShopManager {
 
     /**
      * Logs out the user and deletes the token.
-     * @param token which user wants to logout
+     * @param token which user wants to log out
      */
     public void logout(UUID token) {
         allTokens.remove(token);
@@ -73,7 +73,6 @@ public class ShopManager {
      * @throws Exception throws exception if the user has to less money for this purchase or there are not enough products on the market
      */
     public void buyProduct(String product, int count, UUID token) throws Exception {
-        UUID userID = getUserIDByToken(token);
         int index = getIndexOfUserByToken(token);
         User user = registeredUsers.get(index);
         if ((user.getBalance() - market.getPrice(product) * count) < 0) throw new Exception("Not enough Money!");
@@ -91,7 +90,6 @@ public class ShopManager {
      * @throws Exception throws exception if the user not enough units of the product he wants to sell
      */
     public void sellProduct(String product, int count, UUID token) throws Exception {
-        UUID userID = getUserIDByToken(token);
         int index = getIndexOfUserByToken(token);
         User user = registeredUsers.get(index);
         user.updateDepot(product, -count);
