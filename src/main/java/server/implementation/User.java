@@ -17,7 +17,8 @@ public class User {
         this.balance = 100;
     }
 
-    public void updateDepot(String product, int count) {
+    public void updateDepot(String product, int count) throws Exception {
+        if (depot.getOrDefault(product, 0) - count < 0) throw new Exception("Not enough products available!");
         if(depot.containsKey(product)) {
             depot.put(product, depot.get(product) + count);
         } else {
