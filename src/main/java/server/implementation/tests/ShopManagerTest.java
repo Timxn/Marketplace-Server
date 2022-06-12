@@ -87,6 +87,14 @@ class ShopManagerTest {
     }
 
     @Test
+    void setBalance() throws InstanceAlreadyExistsException {
+        shopManager.register("123", "123");
+        UUID token = shopManager.login("123", "123");
+        shopManager.setBalance(token, 3000.0);
+        assertEquals(3000.0, shopManager.getBalance(token));
+    }
+
+    @Test
     void deleteAccount() throws Exception {
         shopManager.register("123", "123");
         UUID token = shopManager.login("123", "123");
