@@ -17,6 +17,7 @@ public class RestAPI {
 //    private static Market markt = new Market();
     // http://localhost:4567/hello
     public static void main(String[] args) {
+        /*
         before(((request, response) -> {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
@@ -180,5 +181,5 @@ public class RestAPI {
         JsonObject returnJSON= new JsonObject();
         returnJSON.addProperty("balance", value);
         return returnJSON.toString();
-    }
-}
+    } */
+}}
