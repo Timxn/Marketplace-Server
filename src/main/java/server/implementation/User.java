@@ -19,7 +19,7 @@ public class User {
 
     /**
      * Adjusts the number of products in the depot.
-     * @param product which product will be changed
+     * @param product product that will be changed
      * @param count the number to be changed (positive or negative)
      * @throws Exception throws exception if less than 0 products would be available after deduction
      */
