@@ -14,7 +14,7 @@ public class User {
         this.userID = UUID.randomUUID();
         this.mail = mail;
         this.password = password;
-        this.balance = 0;
+        this.balance = 100;
     }
 
     public void updateDepot(String product, int count) {
