@@ -3,7 +3,7 @@ package server.implementation;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class User {
+public class User implements server.interfaces.InterfaceUser {
     private final UUID userID;
     private final String mail;
     private final String password;
@@ -23,6 +23,7 @@ public class User {
      * @param count the number to be changed (positive or negative)
      * @throws Exception throws exception if less than 0 products would be available after deduction
      */
+    @Override
     public void updateDepot(String product, int count) throws Exception {
         if (depot.getOrDefault(product, 0) + count < 0) throw new Exception("Not enough products available!");
         if(depot.containsKey(product)) {
@@ -36,6 +37,7 @@ public class User {
      * Returns the userID of the user.
      * @return userID
      */
+    @Override
     public UUID getUserID() {
         return userID;
     }
@@ -44,6 +46,7 @@ public class User {
      * Returns the mail of the user.
      * @return mail
      */
+    @Override
     public String getMail() {
         return mail;
     }
@@ -52,6 +55,7 @@ public class User {
      * Returns the password of the user.
      * @return password
      */
+    @Override
     public String getPassword() {
         return password;
     }
@@ -60,6 +64,7 @@ public class User {
      * Returns the amount of money the user has.
      * @return balance
      */
+    @Override
     public double getBalance() {
         return balance;
     }
@@ -68,6 +73,7 @@ public class User {
      * Alters the amount of money the user has.
      * @param balance the new amount of money
      */
+    @Override
     public void setBalance(double balance) {
         this.balance = balance;
     }
@@ -76,6 +82,7 @@ public class User {
      * Returns the depot which all items the user has.
      * @return depot of the user
      */
+    @Override
     public HashMap<String, Integer> getDepot() {
         return depot;
     }

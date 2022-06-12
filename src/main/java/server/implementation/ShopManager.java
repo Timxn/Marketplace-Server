@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class ShopManager {
+public class ShopManager implements server.interfaces.InterfaceShopManager {
     ArrayList<User> registeredUsers = new ArrayList<>();
     HashMap<UUID, UUID> allTokens = new HashMap<>();
     Market market = new Market();
@@ -17,6 +17,7 @@ public class ShopManager {
      * @param password password for the new user
      * @throws InstanceAlreadyExistsException throws exception if a user with this mail is already registered
      */
+    @Override
     public void register(String mail, String password) throws InstanceAlreadyExistsException { //exception work?
         for (User user : registeredUsers) {
             if (user.getMail().equals(mail)) throw new InstanceAlreadyExistsException("Mail already registered!");
@@ -30,6 +31,7 @@ public class ShopManager {
      * @param password password of the user
      * @return token which the user uses to perform further actions
      */
+    @Override
     public UUID login(String mail, String password) {
         for (User user : registeredUsers) {
             if (user.getMail().equals(mail) && user.getPassword().equals(password)) {
@@ -45,6 +47,7 @@ public class ShopManager {
      * Logs out the user and deletes the token.
      * @param token which user wants to log out
      */
+    @Override
     public void logout(UUID token) {
         allTokens.remove(token);
     }
@@ -53,6 +56,7 @@ public class ShopManager {
      * Deletes an account and makes all its products available on the market.
      * @param token token with which the account to be deleted is determined
      */
+    @Override
     public void deleteAccount(UUID token) { //deletes a user and first sells all their products
         User user = getUserByUserID(getUserIDByToken(token));
         HashMap<String, Integer> toSell = new HashMap<>(user.getDepot());
@@ -72,6 +76,7 @@ public class ShopManager {
      * @param token token of the user
      * @throws Exception throws exception if the user has to less money for this purchase or there are not enough products on the market
      */
+    @Override
     public void buyProduct(String product, int count, UUID token) throws Exception {
         int index = getIndexOfUserByToken(token);
         User user = registeredUsers.get(index);
@@ -89,6 +94,7 @@ public class ShopManager {
      * @param token token of the user
      * @throws Exception throws exception if the user not enough units of the product he wants to sell
      */
+    @Override
     public void sellProduct(String product, int count, UUID token) throws Exception {
         int index = getIndexOfUserByToken(token);
         User user = registeredUsers.get(index);
@@ -102,6 +108,7 @@ public class ShopManager {
      * Returns the number of times a product is offered for all products.
      * @return A Hashmap which contains the names and amounts of all products
      */
+    @Override
     public HashMap<String, Integer> getAllOffers(){
         return market.getOffers();
     }
@@ -110,6 +117,7 @@ public class ShopManager {
      * Returns the prices for all products.
      * @return A Hashmap which contains the names and prices of all products
      */
+    @Override
     public HashMap<String, Double> getAllPrices() {
         return market.getPrices();
     }
@@ -119,6 +127,7 @@ public class ShopManager {
      * @param token token of the user
      * @return depot of the user
      */
+    @Override
     public HashMap<String, Integer> getDepot(UUID token) {
         return registeredUsers.get(getIndexOfUserByToken(token)).getDepot();
     }
@@ -128,6 +137,7 @@ public class ShopManager {
      * @param token token of the user
      * @return balance
      */
+    @Override
     public double getBalance(UUID token) {
         return registeredUsers.get(getIndexOfUserByToken(token)).getBalance();
     }
@@ -138,6 +148,7 @@ public class ShopManager {
      * @param amount  amount of money the user gets
      */
     //cheat-method
+    @Override
     public void setBalance(UUID token, double amount) {
         registeredUsers.get(getIndexOfUserByToken(token)).setBalance(amount);
     }
@@ -148,6 +159,7 @@ public class ShopManager {
      * @param count amount which will be added
      */
     //cheat-method
+    @Override
     public void addProductToOffers(String product, int count) {
         market.sell(product, count);
     }
