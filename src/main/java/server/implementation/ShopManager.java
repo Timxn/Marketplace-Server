@@ -139,6 +139,7 @@ public class ShopManager {
      * @param token token of the user
      * @param amount  amount of money the user gets
      */
+    //cheat-method
     public void setBalance(UUID token, double amount) {
         registeredUsers.get(getIndexOfUserByToken(token)).setBalance(amount);
     }
@@ -148,6 +149,7 @@ public class ShopManager {
      * @param product type of the product
      * @param count amount which will be added
      */
+    //cheat-method
     public void addProductToOffers(String product, int count) {
         market.sell(product, count);
     }
