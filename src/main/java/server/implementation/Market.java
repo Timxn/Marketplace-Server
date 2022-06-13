@@ -1,8 +1,10 @@
 package server.implementation;
 
+import server.interfaces.InterfaceMarket;
+
 import java.util.HashMap;
 
-public class Market implements server.interfaces.InterfaceMarket {
+public class Market implements InterfaceMarket {
     private final HashMap<String, Integer> offers = new HashMap<>();
     private final HashMap<String, Double> prices = new HashMap<>();
 
@@ -14,12 +16,12 @@ public class Market implements server.interfaces.InterfaceMarket {
      */
     @Override
     public double sell(String product, int count) {
-        if(offers.containsKey(product)) {
+        if (offers.containsKey(product)) {
             offers.put(product, offers.get(product) + count);
         } else {
             offers.put(product, count);
         }
-        if(!prices.containsKey(product)) {
+        if (!prices.containsKey(product)) {
             prices.put(product, 50.0);
         }
         return prices.get(product) * count;
@@ -30,19 +32,12 @@ public class Market implements server.interfaces.InterfaceMarket {
      * @param product product that will be bought
      * @param count amount of the product
      * @return price of the product times the amount
-     * @throws Exception Throws exception if you want to buy more products than are available.
+     * @throws RuntimeException Throws exception if you want to buy more products than are available.
      */
     @Override
-    public double buy(String product, int count) throws Exception {
-        if (offers.getOrDefault(product, 0 ) - count < 0) throw new Exception("Not enough products available!");
-        if(offers.containsKey(product)) {
-            offers.put(product, offers.get(product) - count);
-        } else {
-            offers.put(product, count);
-        }
-        if(!prices.containsKey(product)) {
-            prices.put(product, 50.0);
-        }
+    public double buy(String product, int count) {
+        if (offers.getOrDefault(product, 0 ) - count < 0) throw new RuntimeException("Not enough products available!");
+        offers.put(product, offers.get(product) - count);
         return prices.get(product) * count;
     }
 

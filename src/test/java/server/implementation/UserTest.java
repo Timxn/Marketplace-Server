@@ -1,9 +1,9 @@
-package server.implementation.tests;
+package server.implementation;
 
 import org.junit.jupiter.api.Test;
-import server.implementation.User;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserTest {
     User user = new User("timon", "123");
@@ -34,7 +34,7 @@ class UserTest {
     }
 
     @Test
-    void getDepot() throws Exception {
+    void getDepot() {
         user.updateDepot("apfel", 2);
         user.updateDepot("bapfel", 2);
         user.updateDepot("apfel", -1);
