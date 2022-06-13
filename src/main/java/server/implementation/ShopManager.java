@@ -9,9 +9,10 @@ import java.util.UUID;
 public class ShopManager implements server.interfaces.InterfaceShopManager {
     ArrayList<User> registeredUsers = new ArrayList<>();
     HashMap<UUID, UUID> allTokens = new HashMap<>();
-    Market market = new Market();
+    Market market;
 
     public ShopManager() {
+        this.market = new Market();
         try {
             testData();
         } catch (Exception e) {

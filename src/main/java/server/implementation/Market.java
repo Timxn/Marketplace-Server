@@ -35,14 +35,7 @@ public class Market implements server.interfaces.InterfaceMarket {
     @Override
     public double buy(String product, int count) throws Exception {
         if (offers.getOrDefault(product, 0 ) - count < 0) throw new Exception("Not enough products available!");
-        if(offers.containsKey(product)) {
-            offers.put(product, offers.get(product) - count);
-        } else {
-            offers.put(product, count);
-        }
-        if(!prices.containsKey(product)) {
-            prices.put(product, 50.0);
-        }
+        offers.put(product, offers.get(product) - count);
         return prices.get(product) * count;
     }
 
