@@ -1,23 +1,17 @@
 package server;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import server.implementation.ShopManager;
-//import server.implementation.Market;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 import static spark.Spark.*;
 
 public class RestAPI {
     private static ShopManager shopManager = new ShopManager();
-//    private static Market markt = new Market();
-    // http://localhost:4567/hello
+
     public static void main(String[] args) {
-        /*
         before(((request, response) -> {
             JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
             if (!(request.pathInfo().equals("/user/register")) && !(request.pathInfo().equals("/user/login"))) {
@@ -37,6 +31,7 @@ public class RestAPI {
                 }
                 try {
                     shopManager.register(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
+                    System.out.println("registered");
                     response.status(201);
                 } catch (InstanceAlreadyExistsException e) {
                     response.status(405);
@@ -49,8 +44,10 @@ public class RestAPI {
                 try {
                     token = shopManager.login(requestJSON.get("mail").getAsString(), requestJSON.get("password").getAsString());
                     response.status(201);
+                    response.type("application/json; charset=utf-8");
                     JsonObject returnElement = new JsonObject();
                     returnElement.addProperty("token", token.toString());
+                    System.out.println("login");
                     return returnElement.toString();
                 } catch (NoSuchElementException e) {
                     response.status(405);
@@ -68,70 +65,56 @@ public class RestAPI {
                 }
                 shopManager.logout(UUID.fromString((requestJSON.get("token").getAsString())));
                 response.status(200);
+                System.out.println("logout");
                 return response.status();
             });
-            put("/deposit", ((request, response) -> {
-                JsonObject requestJSON = null;
-                try {
-                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                } catch (JsonParseException e) {
-                    response.status(400);
-                    return exampleJsonWithTokenAndValue();
-                }
-                double value = 0;
-                try {
-                    value = requestJSON.get("value").getAsDouble();
-                } catch (NumberFormatException e) {
-                    response.status(400);
-                    return exampleJsonWithTokenAndValue();
-                }
-                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = shopManager.deposit(value, token);
+            delete("/removeUser", ((request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                shopManager.deleteAccount(UUID.fromString(requestJSON.get("token").getAsString()));
                 response.status(200);
-                return returnJSONWithUserIDAndBalance(newBalance);
+                return response.status();
             }));
-            put("/withdraw", ((request, response) -> {
-                JsonObject requestJSON = null;
-                try {
-                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                } catch (JsonParseException e) {
-                    return exampleJsonWithTokenAndValue();
-                }
-                double value = 0;
-                try {
-                    value = requestJSON.get("value").getAsDouble();
-                } catch (NumberFormatException e) {
-                    return exampleJsonWithTokenAndValue();
-                }
-                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = shopManager.withdraw(value, token);
+            post("/addMoney", (request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                shopManager.setBalance(UUID.fromString(requestJSON.get("token").getAsString()), Double.valueOf(requestJSON.get("value").getAsString()));
                 response.status(200);
-                return returnJSONWithUserIDAndBalance(newBalance);
-            }));
-            put("/getInventory", ((request, response) -> {
-                JsonObject requestJSON = null;
-                try {
-                    requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
-                } catch (JsonParseException e) {
-                    return exampleJsonWithTokenAndValue();
-                }
-                double value = 0;
-                try {
-                    value = requestJSON.get("value").getAsDouble();
-                } catch (NumberFormatException e) {
-                    return exampleJsonWithTokenAndValue();
-                }
-                UUID token = UUID.fromString((requestJSON.get("token").getAsString()));
-                double newBalance = shopManager.withdraw(value, token);
+                return response.status();
+            });
+            post("/balance", (request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                double tmp = shopManager.getBalance(UUID.fromString(requestJSON.get("token").getAsString()));
                 response.status(200);
-                return returnJSONWithUserIDAndBalance(newBalance);
-            }));
+                JsonObject exampleJson = new JsonObject();
+                exampleJson.addProperty("balance", tmp);
+                return exampleJson.toString();
+            });
+            post("/depot", (request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                UUID tok = UUID.fromString(requestJSON.get("token").getAsString());
+                HashMap<String, Integer> depot = shopManager.getDepot(tok);
+                JsonObject json = new JsonObject();
+                for (Map.Entry<String, Integer> entry: depot.entrySet()) {
+                    JsonObject tmp = new JsonObject();
+                    tmp.addProperty("count", depot.get(entry.getKey()));
+                    json.add(entry.getKey(), tmp);
+                }
+                response.status(200);
+                return json.toString();
+            });
         });
         path("/market", () -> {
-            get("/products", (request, response) -> {
-//                markt.getAllProducts();
-                response.status(501);
-                return "WIP";
+            post("/products", (request, response) -> {
+                HashMap<String, Integer> offers = shopManager.getAllOffers();
+                HashMap<String, Double> prices = shopManager.getAllPrices();
+                JsonObject json = new JsonObject();
+                for (Map.Entry<String, Integer> entry: offers.entrySet()) {
+                    JsonObject tmp = new JsonObject();
+                    tmp.addProperty("count", offers.get(entry.getKey()));
+                    tmp.addProperty("price", prices.get(entry.getKey()));
+                    json.add(entry.getKey(), tmp);
+                }
+                response.status(200);
+                return json.toString();
             });
             post("/addProduct", ((request, response) -> {
                 JsonObject requestJSON = null;
@@ -154,13 +137,23 @@ public class RestAPI {
                 response.status(501);
                 return "WIP";
             }));
-            post("/sell", ((request, response) -> {
-                response.status(501);
-                return "WIP";
-            }));
             post("/buy", ((request, response) -> {
-                response.status(501);
-                return "WIP";
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                shopManager.buyProduct(requestJSON.get("productname").getAsString(), Integer.valueOf(requestJSON.get("count").toString()), UUID.fromString(requestJSON.get("token").getAsString()));
+                response.status(200);
+                return "";
+            }));
+            post("/addProductToMarket", ((request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                shopManager.addProductToOffers(requestJSON.get("productname").getAsString(), Integer.valueOf(requestJSON.get("count").toString()));
+                response.status(200);
+                return "";
+            }));
+            post("/sell", ((request, response) -> {
+                JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
+                shopManager.sellProduct(requestJSON.get("productname").getAsString(), Integer.valueOf(requestJSON.get("count").toString()), UUID.fromString(requestJSON.get("token").getAsString()));
+                response.status(200);
+                return "";
             }));
         });
     }
@@ -181,5 +174,5 @@ public class RestAPI {
         JsonObject returnJSON= new JsonObject();
         returnJSON.addProperty("balance", value);
         return returnJSON.toString();
-    } */
-}}
+    }
+}

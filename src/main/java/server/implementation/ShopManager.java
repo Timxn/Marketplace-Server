@@ -175,7 +175,7 @@ public class ShopManager implements InterfaceShopManager {
         market.sell(product, count);
     }
 
-    private UUID getUserIDByToken(UUID token) {
+    public UUID getUserIDByToken(UUID token) {
         if (allTokens.get(token) == null) throw new NoSuchElementException("This user does not exist!");
         return allTokens.get(token);
     }
