@@ -46,8 +46,8 @@ public class Market implements InterfaceMarket {
      * If there are more than 5 products the price becomes less and vice versa. If there are 5 products, the price remains the same.
      */
     @Override
-    public void updatePrice() {
-        prices.replaceAll((p, v) -> v / (offers.get(p) / 5.0));
+    public void updatePrice(String product) {
+        prices.put(product, prices.get(product) / ((offers.get(product) / 5.0)));
     }
 
     /**

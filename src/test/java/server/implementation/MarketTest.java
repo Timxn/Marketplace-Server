@@ -58,7 +58,8 @@ class MarketTest {
     void updatePrice() {
         market.sell("apfel", 3);
         market.sell("bapfel", 7);
-        market.updatePrice();
+        market.updatePrice("apfel");
+        market.updatePrice("bapfel");
         assertEquals(83.33333333333334, market.getPrice("apfel"));
         assertEquals(35.714285714285715, market.getPrice("bapfel"));
     }

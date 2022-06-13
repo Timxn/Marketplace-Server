@@ -95,7 +95,7 @@ public class ShopManager implements InterfaceShopManager {
         user.setBalance(user.getBalance() - market.buy(product, count));
         user.updateDepot(product, count);
         registeredUsers.set(index, user);
-        market.updatePrice();
+        market.updatePrice(product);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ShopManager implements InterfaceShopManager {
         user.updateDepot(product, -count);
         user.setBalance(user.getBalance() + market.sell(product, count));
         registeredUsers.set(index, user);
-        market.updatePrice();
+        market.updatePrice(product);
     }
 
     /**
@@ -216,10 +216,10 @@ public class ShopManager implements InterfaceShopManager {
         buyProduct("Baby Yoda", 1, token);
         logout(token);
         token = login("bonnie", "123");
-        setBalance(token, 2000.0);
+        setBalance(token, 20000.0);
         buyProduct("Armin in red underwear", 1, token);
         buyProduct("Armin in high heels", 6, token);
-        buyProduct("Armin in padded bra", 35, token);
+        buyProduct("Armin in padded bra", 3, token);
         logout(token);
         token = login("justus", "123");
         setBalance(token, 200000.69);
