@@ -11,6 +11,14 @@ public class ShopManager implements server.interfaces.InterfaceShopManager {
     HashMap<UUID, UUID> allTokens = new HashMap<>();
     Market market = new Market();
 
+    public ShopManager() {
+        try {
+            testData();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Registers a new user with a mail and a password.
      * @param mail mail for the new user
@@ -180,5 +188,39 @@ public class ShopManager implements server.interfaces.InterfaceShopManager {
 
     private int getIndexOfUserByToken(UUID token) {
         return registeredUsers.indexOf(getUserByUserID(getUserIDByToken(token)));
+    }
+
+    //Creates test data for the market and the user list
+    private void testData() throws Exception {
+        register("timon", "123");
+        register("bonnie", "123");
+        register("justus", "123");
+        addProductToOffers("Kidney", 2);
+        addProductToOffers("Kidney-bean", 100);
+        addProductToOffers("Will to live", 5);
+        addProductToOffers("sample solutions", 20);
+        addProductToOffers("SI Leistungstest", 1);
+        addProductToOffers("Baby Yoda", 1);
+        addProductToOffers("Armin in lace bra", 100);
+        addProductToOffers("Armin in padded bra", 50);
+        addProductToOffers("Armin in matching set", 3);
+        addProductToOffers("Armin in high heels", 7);
+        addProductToOffers("Armin in red underwear", 2);
+        UUID token = login("timon", "123");
+        setBalance(token, 20000.0);
+        buyProduct("SI Leistungstest", 1, token);
+        buyProduct("Armin in lace bra", 50, token);
+        buyProduct("Baby Yoda", 1, token);
+        logout(token);
+        token = login("bonnie", "123");
+        setBalance(token, 2000.0);
+        buyProduct("Armin in red underwear", 1, token);
+        buyProduct("Armin in high heels", 6, token);
+        buyProduct("Armin in padded bra", 35, token);
+        logout(token);
+        token = login("justus", "123");
+        setBalance(token, 200000.69);
+        buyProduct("Armin in matching set", 2, token);
+        logout(token);
     }
 }
