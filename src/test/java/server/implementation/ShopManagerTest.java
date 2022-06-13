@@ -1,14 +1,13 @@
-package server.implementation.tests;
+package server.implementation;
 
 import org.junit.jupiter.api.Test;
-import server.implementation.ShopManager;
 
 import javax.management.InstanceAlreadyExistsException;
-
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ShopManagerTest {
     ShopManager shopManager = new ShopManager();
@@ -22,7 +21,7 @@ class ShopManagerTest {
     @Test
     void login() throws InstanceAlreadyExistsException {
         shopManager.register("123", "123");
-        UUID token = shopManager.login("123", "123");
+        shopManager.login("123", "123");
         assertThrows(NoSuchElementException.class, () -> shopManager.login("13", "123"));
     }
 

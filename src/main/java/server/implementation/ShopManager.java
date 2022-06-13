@@ -1,12 +1,14 @@
 package server.implementation;
 
+import server.interfaces.InterfaceShopManager;
+
 import javax.management.InstanceAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-public class ShopManager implements server.interfaces.InterfaceShopManager {
+public class ShopManager implements InterfaceShopManager {
     ArrayList<User> registeredUsers = new ArrayList<>();
     HashMap<UUID, UUID> allTokens = new HashMap<>();
     Market market;

@@ -1,11 +1,11 @@
-package server.implementation.tests;
+package server.implementation;
 
 import org.junit.jupiter.api.Test;
-import server.implementation.Market;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MarketTest {
     Market market = new Market();
@@ -16,7 +16,7 @@ class MarketTest {
     }
 
     @Test
-    void buy() throws Exception {
+    void buy() {
         assertThrows(Exception.class, () -> market.buy("apfel" , 1));
         market.sell("apfel", 3);
         assertEquals(150, market.buy("apfel", 3));

@@ -1,8 +1,10 @@
 package server.implementation;
 
+import server.interfaces.InterfaceMarket;
+
 import java.util.HashMap;
 
-public class Market implements server.interfaces.InterfaceMarket {
+public class Market implements InterfaceMarket {
     private final HashMap<String, Integer> offers = new HashMap<>();
     private final HashMap<String, Double> prices = new HashMap<>();
 

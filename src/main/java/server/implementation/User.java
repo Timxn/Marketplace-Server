@@ -1,9 +1,11 @@
 package server.implementation;
 
+import server.interfaces.InterfaceUser;
+
 import java.util.HashMap;
 import java.util.UUID;
 
-public class User implements server.interfaces.InterfaceUser {
+public class User implements InterfaceUser {
     private final UUID userID;
     private final String mail;
     private final String password;
