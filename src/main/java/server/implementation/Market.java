@@ -14,12 +14,12 @@ public class Market implements server.interfaces.InterfaceMarket {
      */
     @Override
     public double sell(String product, int count) {
-        if(offers.containsKey(product)) {
+        if (offers.containsKey(product)) {
             offers.put(product, offers.get(product) + count);
         } else {
             offers.put(product, count);
         }
-        if(!prices.containsKey(product)) {
+        if (!prices.containsKey(product)) {
             prices.put(product, 50.0);
         }
         return prices.get(product) * count;
