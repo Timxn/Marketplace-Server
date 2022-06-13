@@ -101,10 +101,10 @@ public class ShopManager implements server.interfaces.InterfaceShopManager {
      * @param product product the user wants to sell
      * @param count amount of the product
      * @param token token of the user
-     * @throws Exception throws exception if the user not enough units of the product he wants to sell
+     * @throws RuntimeException throws exception if the user not enough units of the product he wants to sell
      */
     @Override
-    public void sellProduct(String product, int count, UUID token) throws Exception {
+    public void sellProduct(String product, int count, UUID token) {
         int index = getIndexOfUserByToken(token);
         User user = registeredUsers.get(index);
         user.updateDepot(product, -count);

@@ -21,11 +21,11 @@ public class User implements server.interfaces.InterfaceUser {
      * Adjusts the number of products in the depot.
      * @param product product that will be changed
      * @param count the number to be changed (positive or negative)
-     * @throws Exception throws exception if less than 0 products would be available after deduction
+     * @throws RuntimeException throws exception if less than 0 products would be available after deduction
      */
     @Override
-    public void updateDepot(String product, int count) throws Exception {
-        if (depot.getOrDefault(product, 0) + count < 0) throw new Exception("Not enough products available!");
+    public void updateDepot(String product, int count) {
+        if (depot.getOrDefault(product, 0) + count < 0) throw new RuntimeException("Not enough products available!");
         if(depot.containsKey(product)) {
             depot.put(product, depot.get(product) + count);
         } else {

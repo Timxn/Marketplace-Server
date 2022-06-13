@@ -30,11 +30,11 @@ public class Market implements server.interfaces.InterfaceMarket {
      * @param product product that will be bought
      * @param count amount of the product
      * @return price of the product times the amount
-     * @throws Exception Throws exception if you want to buy more products than are available.
+     * @throws RuntimeException Throws exception if you want to buy more products than are available.
      */
     @Override
-    public double buy(String product, int count) throws Exception {
-        if (offers.getOrDefault(product, 0 ) - count < 0) throw new Exception("Not enough products available!");
+    public double buy(String product, int count) {
+        if (offers.getOrDefault(product, 0 ) - count < 0) throw new RuntimeException("Not enough products available!");
         offers.put(product, offers.get(product) - count);
         return prices.get(product) * count;
     }
