@@ -26,7 +26,7 @@ public interface InterfaceMarket {
      * Calculates the new price for all products. Uses the old price and divides the old price by the number of available products divided by 5.
      * If there are more than 5 products the price becomes less and vice versa. If there are 5 products, the price remains the same.
      */
-    void updatePrice();
+    void updatePrice(String product);
 
     /**
      * Returns the number of times the product is offered.
