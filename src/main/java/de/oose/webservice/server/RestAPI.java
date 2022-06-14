@@ -1,7 +1,7 @@
-package server;
+package de.oose.webservice.server;
 
 import com.google.gson.*;
-import server.implementation.ShopManager;
+import de.oose.webservice.server.implementation.ShopManager;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.*;

@@ -1,6 +1,6 @@
-package server.implementation;
+package de.oose.webservice.server.implementation;
 
-import server.interfaces.InterfaceShopManager;
+import de.oose.webservice.server.interfaces.InterfaceShopManager;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.ArrayList;

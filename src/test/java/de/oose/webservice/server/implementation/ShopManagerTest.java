@@ -1,4 +1,4 @@
-package server.implementation;
+package de.oose.webservice.server.implementation;
 
 import org.junit.jupiter.api.Test;
 

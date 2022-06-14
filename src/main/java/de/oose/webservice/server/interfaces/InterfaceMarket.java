@@ -1,4 +1,4 @@
-package server.interfaces;
+package de.oose.webservice.server.interfaces;
 
 import java.util.HashMap;
 

@@ -1,6 +1,6 @@
-package server.implementation;
+package de.oose.webservice.server.implementation;
 
-import server.interfaces.InterfaceUser;
+import de.oose.webservice.server.interfaces.InterfaceUser;
 
 import java.util.HashMap;
 import java.util.UUID;

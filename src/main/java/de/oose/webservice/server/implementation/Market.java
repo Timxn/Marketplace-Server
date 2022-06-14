@@ -1,6 +1,6 @@
-package server.implementation;
+package de.oose.webservice.server.implementation;
 
-import server.interfaces.InterfaceMarket;
+import de.oose.webservice.server.interfaces.InterfaceMarket;
 
 import java.util.HashMap;
 

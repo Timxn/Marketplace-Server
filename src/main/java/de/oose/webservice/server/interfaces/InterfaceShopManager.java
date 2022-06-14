@@ -1,4 +1,4 @@
-package server.interfaces;
+package de.oose.webservice.server.interfaces;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.HashMap;

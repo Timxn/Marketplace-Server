@@ -1,12 +1,18 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
-group 'dieAllerBesten.oose'
+group 'de.oose.webservice.server'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainModule = 'de.oose.webservice.server'
+    mainClass = 'de.oose.webservice.server.RestAPI'
 }
 
 dependencies {
