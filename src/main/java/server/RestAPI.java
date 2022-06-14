@@ -10,6 +10,7 @@ import static spark.Spark.*;
 
 public class RestAPI {
     private static ShopManager shopManager = new ShopManager();
+    private static final String URL = "http://localhost:4567";
 
     public static void main(String[] args) {
         before(((request, response) -> {
@@ -23,6 +24,24 @@ public class RestAPI {
             }
         }));
         path("/user", () -> {
+            get("", ((request, response) -> {
+                JsonObject responseJson = new JsonObject();
+                responseJson.addProperty("post", URL + "/user/register");
+                responseJson.addProperty("post", URL + "/user/login");
+                responseJson.addProperty("delete", URL + "/user/logout");
+                responseJson.addProperty("delete", URL + "/user/removeUser");
+                responseJson.addProperty("post", URL + "/user/addMoney");
+                responseJson.addProperty("post", URL + "/user/balance");
+                responseJson.addProperty("post", URL + "/user/depot");
+                responseJson.addProperty("post", URL + "/market/products");
+                responseJson.addProperty("post", URL + "/market/addProduct");
+                responseJson.addProperty("delete", URL + "/market/deleteProduct");
+                responseJson.addProperty("post", URL + "/market/addProductToMarket");
+                responseJson.addProperty("post", URL + "/market/sell");
+                responseJson.addProperty("post", URL + "/market/buy");
+                response.status(200);
+                return responseJson.toString();
+            }));
             post("/register", (request, response) -> {
                 JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
                 if (requestJSON.get("mail") == null || requestJSON.get("password") == null) {
@@ -132,10 +151,6 @@ public class RestAPI {
 //                markt.addProduct(name);
                 response.status(401);
                 return "Done!";
-            }));
-            delete("/deleteProduct", ((request, response) -> {
-                response.status(501);
-                return "WIP";
             }));
             post("/buy", ((request, response) -> {
                 JsonObject requestJSON = new JsonParser().parse(request.body()).getAsJsonObject();
