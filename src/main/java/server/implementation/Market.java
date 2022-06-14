@@ -48,6 +48,9 @@ public class Market implements InterfaceMarket {
     @Override
     public void updatePrice(String product) {
         prices.put(product, prices.get(product) / ((offers.get(product) / 5.0)));
+        if (offers.get(product) == 0) {
+            prices.remove(product);
+        }
     }
 
     /**
