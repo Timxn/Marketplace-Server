@@ -26,4 +26,4 @@ Autoren: Timon Stronczek, Justus Pfaue, Bonnie Jo Mayer
 - /market/buy - buy a product to the market with a post reqeuest {"token": "TOKEN","productname":"PRODUCTNAME","count":42}
 
 
-![alt uml](https://gitlab.system.intern.electi-cooperations.de/die-aller-besten/projekt02/-/raw/readme/uml.png)
+![alt uml](uml.png)
